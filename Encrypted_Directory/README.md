@@ -100,15 +100,15 @@
 ### Cryptography (OpenSSL)
 
 
-	- **Algorithm:** AES-256-CBC 모드 사용 
+* **Algorithm:** AES-256-CBC 모드 사용 
 
 
 
-	- **Key Derivation:** `PKCS5_PBKDF2_HMAC()`을 사용하여 비밀번호와 Salt를 강력한 키로 변환 
+* **Key Derivation:** `PKCS5_PBKDF2_HMAC()`을 사용하여 비밀번호와 Salt를 강력한 키로 변환 
 
 
 
-	- **EVP API:** `EVP_EncryptInit_ex`, `EVP_EncryptUpdate`, `EVP_EncryptFinal_ex` 등을 통한 암호화/복호화 수행 및 패딩 처리 
+* **EVP API:** `EVP_EncryptInit_ex`, `EVP_EncryptUpdate`, `EVP_EncryptFinal_ex` 등을 통한 암호화/복호화 수행 및 패딩 처리 
 
 
 
@@ -178,4 +178,4 @@ kill [Daemon PID]
 
 
 
-*`restored/`: 복호화 요청 시 원본 파일이 복구되어 저장되는 디렉토리입니다.
+* `restored/`: 복호화 요청 시 원본 파일이 복구되어 저장되는 디렉토리입니다.
