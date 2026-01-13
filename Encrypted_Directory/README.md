@@ -3,12 +3,12 @@
 ## 1. 프로젝트 정보 (Project Info)
 
 * **과목명:** UNIX Programming
-* 
-**프로젝트 주제:** 실시간 디렉토리 감시 및 자동 암호화/복호화 시스템 
+ 
+* **프로젝트 주제:** 실시간 디렉토리 감시 및 자동 암호화/복호화 시스템 
 
 
-* 
-**개발자:** 202110937 서형완 
+
+* **개발자:** 202110937 서형완 
 
 
 
@@ -22,27 +22,27 @@
 
 ### 3.1. 프로세스 구성
 
-* 
-**Daemon Process:** `monitor` 디렉토리 감시 및 클라이언트의 요청을 대기하는 백그라운드 프로세스입니다. 
+
+* **Daemon Process:** `monitor` 디렉토리 감시 및 클라이언트의 요청을 대기하는 백그라운드 프로세스입니다. 
 
 
-* 
-**Worker Process:** 데몬에 의해 `fork`되어 실제 암호화 및 복호화 작업을 수행하는 프로세스입니다. 
+
+* **Worker Process:** 데몬에 의해 `fork`되어 실제 암호화 및 복호화 작업을 수행하는 프로세스입니다. 
 
 
-* 
-**Client Process:** 유저로부터 복호화 요청과 비밀번호를 입력받아 데몬에게 전달하는 인터페이스입니다. 
+ 
+* **Client Process:** 유저로부터 복호화 요청과 비밀번호를 입력받아 데몬에게 전달하는 인터페이스입니다. 
 
 
 
 ### 3.2. 동작 흐름
 
-* 
-**암호화:** `monitor` 폴더 생성 → 폴더 내 파일 발생 감지 → 데몬이 워커 `fork` → 워커가 암호화 수행 후 원본 삭제 
+ 
+* **암호화:** `monitor` 폴더 생성 → 폴더 내 파일 발생 감지 → 데몬이 워커 `fork` → 워커가 암호화 수행 후 원본 삭제 
 
 
-* 
-**복호화:** 유저 복호화 요청 → 클라이언트가 메시지 전송(FIFO) → 데몬이 이벤트 수신 후 워커 `fork` → 워커가 복호화 수행 및 완료 신호 전송 
+
+* **복호화:** 유저 복호화 요청 → 클라이언트가 메시지 전송(FIFO) → 데몬이 이벤트 수신 후 워커 `fork` → 워커가 복호화 수행 및 완료 신호 전송 
 
 
 
@@ -53,46 +53,45 @@
 ### UNIX System Programming
 
 * **Process Management:**
-* 
-`fork()`: Worker 프로세스 생성 
+
+	- `fork()`: Worker 프로세스 생성 
 
 
-* 
-`setsid()`: Daemon 프로세스를 터미널과 분리 
+
+	- `setsid()`: Daemon 프로세스를 터미널과 분리 
 
 
-* 
-`execl()`: Daemon에서 Worker 프로세스로 교체 
+
+	- `execl()`: Daemon에서 Worker 프로세스로 교체 
 
 
-* 
-`waitpid()`: Worker 프로세스 종료 대기 (좀비 프로세스 방지) 
+	- `waitpid()`: Worker 프로세스 종료 대기 (좀비 프로세스 방지) 
 
 
 
 
 * **File System & Monitoring:**
-* 
-`inotify_init()`, `inotify_add_watch()`: 디렉토리 내 파일 생성 이벤트 감지 
+
+	- `inotify_init()`, `inotify_add_watch()`: 디렉토리 내 파일 생성 이벤트 감지 
 
 
-* 
-`select()`: Client 요청 대기와 디렉토리 감시 동시 수행 (I/O Multiplexing) 
+
+	- `select()`: Client 요청 대기와 디렉토리 감시 동시 수행 (I/O Multiplexing) 
 
 
-* 
-`unlink()`, `rename()`: 원본 삭제 및 파일 확장자(.enc) 변경 
+
+	- `unlink()`, `rename()`: 원본 삭제 및 파일 확장자(.enc) 변경 
 
 
 
 
 * **IPC (Inter-Process Communication):**
-* 
-`mkfifo()`: 프로세스 간 통신을 위한 FIFO 생성 
+
+	- `mkfifo()`: 프로세스 간 통신을 위한 FIFO 생성 
 
 
-* 
-`open()`, `write()`, `read()`: FIFO 및 파일 입출력 
+
+	- `open()`, `write()`, `read()`: FIFO 및 파일 입출력 
 
 
 
@@ -100,16 +99,16 @@
 
 ### Cryptography (OpenSSL)
 
-* 
-**Algorithm:** AES-256-CBC 모드 사용 
+
+	- **Algorithm:** AES-256-CBC 모드 사용 
 
 
-* 
-**Key Derivation:** `PKCS5_PBKDF2_HMAC()`을 사용하여 비밀번호와 Salt를 강력한 키로 변환 
+
+	- **Key Derivation:** `PKCS5_PBKDF2_HMAC()`을 사용하여 비밀번호와 Salt를 강력한 키로 변환 
 
 
-* 
-**EVP API:** `EVP_EncryptInit_ex`, `EVP_EncryptUpdate`, `EVP_EncryptFinal_ex` 등을 통한 암호화/복호화 수행 및 패딩 처리 
+
+	- **EVP API:** `EVP_EncryptInit_ex`, `EVP_EncryptUpdate`, `EVP_EncryptFinal_ex` 등을 통한 암호화/복호화 수행 및 패딩 처리 
 
 
 
@@ -178,5 +177,5 @@ kill [Daemon PID]
 * `monitor/`: 감시 대상 디렉토리. 이곳에 파일이 들어오면 암호화됩니다. 
 
 
-* 
-`restored/`: 복호화 요청 시 원본 파일이 복구되어 저장되는 디렉토리입니다.
+
+*`restored/`: 복호화 요청 시 원본 파일이 복구되어 저장되는 디렉토리입니다.
